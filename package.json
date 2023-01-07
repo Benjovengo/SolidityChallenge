@@ -1,0 +1,29 @@
+{
+  "name": "soliditychallenge",
+  "version": "1.0.0",
+  "description": "Job application challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Benjovengo/SolidityChallenge.git"
+  },
+  "keywords": [
+    "solidity",
+    "crowdfunding",
+    "ERC20",
+    "token"
+  ],
+  "author": "Fabio Pereira Benjovengo",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Benjovengo/SolidityChallenge/issues"
+  },
+  "homepage": "https://github.com/Benjovengo/SolidityChallenge#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "hardhat": "^2.12.5"
+  }
+}
