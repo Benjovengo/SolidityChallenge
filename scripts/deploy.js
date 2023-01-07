@@ -15,6 +15,15 @@ async function main() {
 
   console.log(`Deployed Challenge Token Contract at: ${challengeToken.address}`)
   console.log(`Total supply: ${challengeToken.totalSupply()} tokens\n`)
+
+  // Deploy Crowdfunding
+  const campainGoal = 10 // Campain Goal - hard-coded
+  const Crowdfunding = await ethers.getContractFactory('Crowdfunding')
+  const crowdfunding = await Crowdfunding.deploy(challengeToken.address, campainGoal)
+  await crowdfunding.deployed()
+
+  console.log(`Deployed Crowdfunding Contract at: ${crowdfunding.address}`)
+  console.log(`Total supply: ${challengeToken.totalSupply()} tokens\n`)
 }
 
 // We recommend this pattern to be able to use async/await everywhere
