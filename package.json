@@ -1,6 +1,7 @@
 {
-  "name": "soliditychallenge",
+  "name": "solidity-challenge",
   "version": "1.0.0",
+  "author": "fabio.benjovengo@gmail.com",
   "description": "Job application challenge",
   "main": "index.js",
   "scripts": {
@@ -25,5 +26,8 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "hardhat": "^2.12.5"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.0"
   }
 }
