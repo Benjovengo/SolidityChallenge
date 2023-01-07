@@ -70,7 +70,7 @@ contract Crowdfunding {
         pledges[msg.sender] = 0; // resets the amount sent by msg.sender
     }
 
-    /* Cancell Function 
+    /* Cancel Function 
        - reverts the funds for all users 
        - each one will only receive the amount funded by themselves
        - only the owner can call this function
