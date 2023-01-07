@@ -1,0 +1,13 @@
+# Specify filepatterns you want git to ignore.
+
+# work directory
+work/
+# npm/node.js directory
+node_modules/
+# dotenv file
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+.vscode
