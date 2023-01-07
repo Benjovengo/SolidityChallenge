@@ -8,14 +8,13 @@ const { ethers } = require("hardhat");
 const hre = require("hardhat");
 
 async function main() {
-  
   // Deploy Token - with an total supply of 1,000,000 tokens
   const ChallengeToken = await ethers.getContractFactory('ChallengeToken')
   const challengeToken = await ChallengeToken.deploy(1000000)
   await challengeToken.deployed()
 
   console.log(`Deployed Challenge Token Contract at: ${challengeToken.address}`)
-  console.log(`Total supply: 1,000,000 tokens\n`)
+  console.log(`Total supply: ${challengeToken.totalSupply()} tokens\n`)
 }
 
 // We recommend this pattern to be able to use async/await everywhere
