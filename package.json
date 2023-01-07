@@ -1,7 +1,7 @@
 {
   "name": "solidity-challenge",
   "version": "1.0.0",
-  "author": "fabio.benjovengo@gmail.com",
+  "author": "Fabio Pereira Benjovengo",
   "description": "Job application challenge",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,6 @@
     "ERC20",
     "token"
   ],
-  "author": "Fabio Pereira Benjovengo",
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/Benjovengo/SolidityChallenge/issues"
@@ -28,6 +27,7 @@
     "hardhat": "^2.12.5"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.0"
+    "@openzeppelin/contracts": "^4.8.0",
+    "chai": "^4.3.7"
   }
 }
