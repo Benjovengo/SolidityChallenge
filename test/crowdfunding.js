@@ -165,7 +165,7 @@ describe('Crowdfunding Funcionalities', () => {
       expect(balance).to.be.equal('3')
     })
 
-    it('Cancel', async () => {
+    it('Cancel crowdfunding', async () => {
       let amountInCHAL = 2
       let amount = toWei(amountInCHAL)
       // transfer funds from different accounts
@@ -195,6 +195,44 @@ describe('Crowdfunding Funcionalities', () => {
       balance = await challengeToken.balanceOf(person3.address)
       balance =  fromWei(balance.toString())
       expect(balance).to.be.equal('5')
+    })
+
+    it('Claim funds', async () => {
+      let transaction = await challengeToken.connect(person1).approve(crowdfunding.address, toWei(4))
+      await transaction.wait()
+      transaction = await challengeToken.connect(person2).approve(crowdfunding.address, toWei(3))
+      await transaction.wait()
+      transaction = await challengeToken.connect(person3).approve(crowdfunding.address, toWei(5))
+      await transaction.wait()
+
+      // contract approval
+      transaction = await challengeToken.connect(firstAccount).approve(crowdfunding.address, toWei(15))
+      await transaction.wait()
+  
+      // add token to crowdfunding
+      await crowdfunding.connect(person1).pledge(toWei(4))
+      await crowdfunding.connect(person2).pledge(toWei(3))
+      await crowdfunding.connect(person2).pledge(toWei(5))
+
+      // take out money
+      await crowdfunding.connect(firstAccount).claim()
+      
+      // get balance of the accounts after pledging and getting back part of the funds
+      let balance = await challengeToken.balanceOf(firstAccount.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('97')
+
+      balance = await challengeToken.balanceOf(person1.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('1')
+
+      balance = await challengeToken.balanceOf(person2.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('2')
+
+      balance = await challengeToken.balanceOf(person3.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('0')
     })
 
   })
