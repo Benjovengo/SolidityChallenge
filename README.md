@@ -4,7 +4,7 @@ This is a smart contract for a crowdfunding campaign that uses a custom ERC-20 t
 
 ## Introduction
 
-It consists of two contracts:
+The project consists of two contracts:
 
 1. The first one is called challengeToken.sol
    - and this the smart contract for the actual token that uses the ERC20 standard.
@@ -19,24 +19,24 @@ It consists of two contracts:
 
 ### Install
 
-1. Clone this repository
-2. Install the dependencies: npm install
+1. Clone this repository: `git clone https://github.com/Benjovengo/SolidityChallenge.git`
+2. Install the dependencies: `npm install`
 
 ### Deploy
 
-1. Start a local Ethereum network with Hardhat: npx hardhat node
-2. Compile the contracts: npx hardhat compile
-3. Migrate the contracts to the local network: npx hardhat migrate
+1. Start a local Ethereum network with Hardhat: `npx hardhat node`
+2. Compile the contracts: `npx hardhat compile`
+3. Migrate the contracts to the local network: `npx hardhat migrate`
 
 ### Test
 
-1. Start a local Ethereum network with Hardhat: npx hardhat node
-2. Run the tests: npx hardhat test
+1. Start a local Ethereum network with Hardhat: `npx hardhat node`
+2. Run the tests: `npx hardhat test`
 
 ### Use
 
-1. Start a local Ethereum network with Hardhat: npx hardhat node
-2. Use the deployed contract by interacting with it through a web3 interface, such as the Hardhat console: npx hardhat console
+1. Start a local Ethereum network with Hardhat: `npx hardhat node`
+2. Use the deployed contract by interacting with it through a _web3 interface_, such as the Hardhat console: `npx hardhat console`
 
 ### Notes
 
