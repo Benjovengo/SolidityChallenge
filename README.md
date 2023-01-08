@@ -4,14 +4,6 @@ This is a smart contract for a crowdfunding campaign that uses a custom ERC-20 t
 
 ## Introduction
 
-The project consists of two contracts:
-
-1. The first one is called challengeToken.sol
-   - and this the smart contract for the actual token that uses the ERC20 standard.
-2. The other one is the crowdfunding smart contract (called Crowdfunding.sol)
-   - essencially it will govern the crowdfunding operations
-   - such as pledging, claiming, cancelling
-
 ### Prerequisites
 
 - Node.js and npm: https://nodejs.org/
@@ -57,3 +49,13 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.js
 ```
+
+## How it works
+
+The project consists of two contracts:
+
+1. The first one is called _challengeToken.sol_
+   - and this the smart contract for the actual token that uses the ERC20 standard.
+2. The other one is the crowdfunding smart contract (called _Crowdfunding.sol_)
+   - essencially it will govern the crowdfunding operations
+   - such as pledging, claiming, cancelling
