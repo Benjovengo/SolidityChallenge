@@ -89,7 +89,7 @@ contract Crowdfunding {
             amount <= pledges[msg.sender],
             "Amount must be lesser than or equal to the amount funded"
         );
-        require(totalRaised <= goal, "Goal has been reached"); // if the goal was reached, msg.sender can't have back the funds
+        require(totalRaised < goal, "Goal has been reached"); // if the goal was reached, msg.sender can't have back the funds
         require(token.transfer(msg.sender, amount), "Transfer failed"); //transfer funds
         pledges[msg.sender] = pledges[msg.sender] - amount; // resets the amount sent by msg.sender
         emit withdrawFunds(msg.sender, amount);
