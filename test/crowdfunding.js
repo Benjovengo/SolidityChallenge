@@ -291,13 +291,13 @@ describe('Crowdfunding Funcionalities', () => {
       await crowdfunding.connect(person1).pledge(amount)
       
       // wait for the deadline and then try to pledge
-//      await delay(10000)
+      await delay(10000)
       transaction = await challengeToken.connect(person2).approve(crowdfunding.address, amount)
       await transaction.wait()
       await crowdfunding.connect(person2).pledge(amount)
 
       // only the first person will be able to contribute to the campain
-//      expect(crowdfunding.totalRaised()).to.be.not.equal(amount)
+      expect(crowdfunding.totalRaised()).to.be.not.equal(amount)
     })
 
     it('withdraw not working after goal has been reached', async () => {
