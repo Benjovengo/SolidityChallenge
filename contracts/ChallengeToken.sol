@@ -1,13 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.17;
 
-/* Custom Token
-  - name: the name of your token
-  - symbol: the symbol of your token
-  - decimals: the number of decimal points your token supports
-  - totalSupply: the total number of tokens that will be minted
- */
-
 // Import OpenZeppelin Modules
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
