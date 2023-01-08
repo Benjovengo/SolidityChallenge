@@ -23,7 +23,7 @@ contract Crowdfunding {
 
     /* Events for DApps to observe changes on state */
     // Changes in states
-    event StateChanged(
+    event stateChanged(
         uint256 totalRaisedDApps,
         uint256 totalPledgesDApps,
         bool newUserToList,
@@ -66,12 +66,11 @@ contract Crowdfunding {
         if (totalRaised >= goal) {
             goalWasReached = true;
         }
-        emit StateChanged(totalRaised, totalPledges, newUser, goalWasReached); // emit event for DApps
+        emit stateChanged(totalRaised, totalPledges, newUser, goalWasReached); // emit event for DApps
     }
 
-    /* Withdraw Function 
-       - doesn't need any argument
-       - msg.sender can only claim the amount funded from msg.sender address
+    /* Withdraw Function
+       - msg.sender can only claim up to the amount funded stored on pledges[msg.sender]
     */
     function withdraw(uint256 amount) public {
         require(
@@ -84,13 +83,13 @@ contract Crowdfunding {
         emit withdrawFunds(msg.sender, amount);
     }
 
-    /* Claim Function 
-       - once the goal has been reached, the owner can claim all the funds in the contract
+    /* Claim Function
+       - once the goal has been reached, the owner can claim the funds in the contract
     */
     function claim() public {
         require(msg.sender == owner, "Only the owner can cancel the campaign"); // only the owner can call this function
         require(totalRaised >= goal, "Goal has not yet been reached"); // if the goal was reached, msg.sender can't claim the funds transferred
-        require(totalRaised > 0, "You have not pledged any funds"); // amount must be positive
+        require(totalRaised > 0, "There are no pledged any funds available"); // amount must be positive
         require(token.transfer(msg.sender, totalRaised), "Transfer failed"); //transfer funds
         emit claimFunds(true);
     }
