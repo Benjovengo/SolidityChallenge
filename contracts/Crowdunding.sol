@@ -19,13 +19,21 @@ contract Crowdfunding {
     uint256 public totalPledges; // Total number of different user accounts
     mapping(uint256 => address) public listOfUsers; // List of all users (used to pay back in case of cancelling of contract)
     bool private newUser = false;
+    bool private goalWasReached = false;
 
-    // Events for DApps to observe changes on state
+    /* Events for DApps to observe changes on state */
+    // Changes in states
     event StateChanged(
         uint256 totalRaisedDApps,
         uint256 totalPledgesDApps,
-        bool newUserToList
+        bool newUserToList,
+        bool goalReached
     );
+
+    event goalReached(bool hasReached); // Goal reached
+    event claimFunds(bool claimedFunds); // Claim funds
+    event cancelCrowdfunding(bool returnTokensToPledgers); // Return funds to original ownersS
+    event withdrawFunds(address whoPledged, uint256 amount); // withdraw funds
 
     constructor(IERC20 _token, uint256 _goal) {
         require(_goal > 0, "Goal must be greater than 0");
@@ -55,14 +63,17 @@ contract Crowdfunding {
         }
         pledges[msg.sender] = pledges[msg.sender].add(amount); // add amount to the funds already pledged by the user
         totalRaised = totalRaised.add(amount); // updates the total amount raised
-        emit StateChanged(totalRaised, totalPledges, newUser); // emit event for DApps
+        if (totalRaised >= goal) {
+            goalWasReached = true;
+        }
+        emit StateChanged(totalRaised, totalPledges, newUser, goalWasReached); // emit event for DApps
     }
 
-    /* Take out Function 
+    /* Withdraw Function 
        - doesn't need any argument
        - msg.sender can only claim the amount funded from msg.sender address
     */
-    function takeOut(uint256 amount) public {
+    function withdraw(uint256 amount) public {
         require(
             amount <= pledges[msg.sender],
             "Amount must be lesser than or equal to the amount funded"
@@ -70,6 +81,7 @@ contract Crowdfunding {
         require(totalRaised <= goal, "Goal has been reached"); // if the goal was reached, msg.sender can't have back the funds
         require(token.transfer(msg.sender, amount), "Transfer failed"); //transfer funds
         pledges[msg.sender] = pledges[msg.sender] - amount; // resets the amount sent by msg.sender
+        emit withdrawFunds(msg.sender, amount);
     }
 
     /* Claim Function 
@@ -80,6 +92,7 @@ contract Crowdfunding {
         require(totalRaised >= goal, "Goal has not yet been reached"); // if the goal was reached, msg.sender can't claim the funds transferred
         require(totalRaised > 0, "You have not pledged any funds"); // amount must be positive
         require(token.transfer(msg.sender, totalRaised), "Transfer failed"); //transfer funds
+        emit claimFunds(true);
     }
 
     /* Cancel Function 
@@ -97,5 +110,6 @@ contract Crowdfunding {
             require(token.transfer(listOfUsers[i], amount), "Transfer failed"); // transfer the funds
             pledges[listOfUsers[i]] = 0; // if the transfer is successfull, resets the amount funded by the particular address
         }
+        emit cancelCrowdfunding(false);
     }
 }
