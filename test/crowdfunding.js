@@ -128,7 +128,7 @@ describe('Crowdfunding Funcionalities', () => {
   // Variables
   let challengeToken
   let crowdfunding
-  
+
   // before each test
   beforeEach(async () => {
     // Setup accounts
@@ -171,7 +171,7 @@ describe('Crowdfunding Funcionalities', () => {
       await crowdfunding.connect(person1).pledge(amount)
       
       let balance = await challengeToken.balanceOf(person1.address)
-      balance =  fromWei(balance.toString())
+      balance = fromWei(balance.toString())
       expect(balance).to.be.equal('95000')
     })
 
