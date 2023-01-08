@@ -1,4 +1,4 @@
-# ERC-20 Crowdfunding Challenge<br><sup><i>using pgradeable Smart Contracts</i></sup>
+# ERC-20 Crowdfunding Challenge<br><sup><i>using upgradeable Smart Contracts</i></sup>
 
 This is a smart contract for a crowdfunding campaign that uses a custom ERC-20 token called _ChallengeToken_. It allows backers to contribute to the campaign and receive ChallengeTokens in return. The campaign has a goal and a deadline, and if the goal is not reached by the deadline, the funds will be returned to the backers.
 
