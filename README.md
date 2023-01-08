@@ -26,6 +26,8 @@ This is a smart contract for a crowdfunding campaign that uses a custom ERC-20 t
 1. Start a local Ethereum network with Hardhat: `npx hardhat node`
 2. Run the tests: `npx hardhat test`
 
+[![asciicast](https://asciinema.org/a/jc6Eo8EZdCy0r4ZHjIIqX2tp8.svg)](https://asciinema.org/a/jc6Eo8EZdCy0r4ZHjIIqX2tp8)
+
 ### Use
 
 1. Start a local Ethereum network with Hardhat: `npx hardhat node`
