@@ -99,7 +99,7 @@ describe('Crowdfunding Funcionalities', () => {
     
     // Deploy Token - with an total supply of 1,000,000 tokens
     const ChallengeToken = await ethers.getContractFactory('ChallengeToken')
-    challengeToken = await ChallengeToken.deploy(100)
+    challengeToken = await ChallengeToken.deploy(1000000)
 
     // transfer fund to person1
     let amountInWei = 5
