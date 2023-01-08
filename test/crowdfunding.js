@@ -20,20 +20,18 @@ describe('Deployment', () => {
   let crowdfunding
 
   beforeEach(async () => {
-  // Setup accounts
-  [firstAccount, person1, person2, person3] = await ethers.getSigners()
-  
-  // Deploy Token - with an total supply of 1,000,000 tokens
-  const ChallengeToken = await ethers.getContractFactory('ChallengeToken')
-  challengeToken = await upgrades.deployProxy(ChallengeToken, [1000000], {initializer: 'initialize'})
+    // Setup accounts
+    [firstAccount, person1, person2, person3] = await ethers.getSigners()
 
-  // Deploy Crowdfunding
-  let campainGoal = 10 // Campain Goal - hard-coded
-  let deadline = 100 // Campain Deadline - hard-coded
-  const Crowdfunding = await ethers.getContractFactory('Crowdfunding')
-  //crowdfunding = await Crowdfunding.deploy(challengeToken.address, campainGoal, deadline)
-  crowdfunding = await upgrades.deployProxy(Crowdfunding, [challengeToken.address, campainGoal, deadline], {initializer: 'initialize'})
+    // Deploy Token - with an total supply of 1,000,000 tokens
+    const ChallengeToken = await ethers.getContractFactory('ChallengeToken')
+    challengeToken = await upgrades.deployProxy(ChallengeToken, [1000000], {initializer: 'initialize'})
 
+    // Deploy Crowdfunding
+    let campainGoal = toWei(1000) // Campain Goal - hard-coded
+    let deadline = 100 // Campain Deadline - hard-coded
+    const Crowdfunding = await ethers.getContractFactory('Crowdfunding')
+    crowdfunding = await upgrades.deployProxy(Crowdfunding, [challengeToken.address, campainGoal, deadline], {initializer: 'initialize'})
   })
 
   it('Token deployment', async () => {
@@ -116,5 +114,167 @@ describe('Deployment', () => {
   it('Deadline', async () => {
     expect(crowdfunding.deadline()).to.be.not.equal(100)
   })
+})
 
+
+
+
+
+/* Tests on crowdfunding */
+describe('Crowdfunding Funcionalities', () => {
+  // before each test
+  beforeEach(async () => {
+    // Setup accounts
+    [firstAccount, person1, person2, person3] = await ethers.getSigners()
+
+    // Deploy Token - with an total supply of 1,000,000 tokens
+    const ChallengeToken = await ethers.getContractFactory('ChallengeToken')
+    challengeToken = await upgrades.deployProxy(ChallengeToken, [1000000], {initializer: 'initialize'})
+
+    // Deploy Crowdfunding
+    let campainGoal = toWei(50000) // Campain Goal - hard-coded
+    let deadline = 30 // Campain Deadline - hard-coded
+    const Crowdfunding = await ethers.getContractFactory('Crowdfunding')
+    crowdfunding = await upgrades.deployProxy(Crowdfunding, [challengeToken.address, campainGoal, deadline], {initializer: 'initialize'})
+
+    // Transfer funds to accounts
+    let amountInCHAL = 100000
+    let amount = toWei(amountInCHAL)
+    // transfer to person1
+    let transaction = await challengeToken.connect(firstAccount).approve(person1.address, amount)
+    await transaction.wait()
+    await challengeToken.connect(firstAccount).transfer(person1.address, amount)
+    // transfer to person2
+    transaction = await challengeToken.connect(firstAccount).approve(person2.address, amount)
+    await transaction.wait()
+    await challengeToken.connect(firstAccount).transfer(person2.address, amount)
+    // transfer to person3
+    transaction = await challengeToken.connect(firstAccount).approve(person3.address, amount)
+    await transaction.wait()
+    await challengeToken.connect(firstAccount).transfer(person3.address, amount)
+  })
+
+  describe('Testing Functions', () => {
+    it('Pledge', async () => {
+      let amountInCHAL = 5000
+      let amount = toWei(amountInCHAL)
+      let transaction = await challengeToken.connect(person1).approve(crowdfunding.address, amount)
+      await transaction.wait()
+
+      await crowdfunding.connect(person1).pledge(amount)
+      
+      let balance = await challengeToken.balanceOf(person1.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('95000')
+    })
+
+    it('Withdraw', async () => {
+      let amountInCHAL = 15000
+      let amount = toWei(amountInCHAL)
+      let transaction = await challengeToken.connect(person1).approve(crowdfunding.address, amount)
+      await transaction.wait()
+      transaction = await challengeToken.connect(person2).approve(crowdfunding.address, amount)
+      await transaction.wait()
+      transaction = await challengeToken.connect(person3).approve(crowdfunding.address, amount)
+      await transaction.wait()
+  
+      // add token to crowdfunding
+      await crowdfunding.connect(person1).pledge(amount)
+      await crowdfunding.connect(person2).pledge(amount)
+
+      // take out money
+      await crowdfunding.connect(person1).withdraw(toWei(8000))
+      await crowdfunding.connect(person2).withdraw(toWei(2000))
+      
+      // get balance of the accounts after pledging and getting back part of the funds
+      let balance = await challengeToken.balanceOf(person1.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('93000')
+
+      balance = await challengeToken.balanceOf(person2.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('87000')
+    })
+
+    it('Cancel crowdfunding', async () => {
+      let amountInCHAL = 10000
+      let amount = toWei(amountInCHAL)
+      // transfer funds from different accounts
+      let transaction = await challengeToken.connect(person1).approve(crowdfunding.address, amount)
+      await transaction.wait()
+      transaction = await challengeToken.connect(person2).approve(crowdfunding.address, amount)
+      await transaction.wait()
+      transaction = await challengeToken.connect(person3).approve(crowdfunding.address, amount)
+      await transaction.wait()
+  
+      // pledge
+      await crowdfunding.connect(person1).pledge(amount)
+      await crowdfunding.connect(person2).pledge(amount)
+      await crowdfunding.connect(person3).pledge(amount)
+      
+  
+      await crowdfunding.connect(firstAccount).cancel() // error if any other account - OK
+      
+      let balance = await challengeToken.balanceOf(person1.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('100000')
+
+      balance = await challengeToken.balanceOf(person2.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('100000')
+
+      balance = await challengeToken.balanceOf(person3.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('100000')
+    })
+
+    it('Claim funds', async () => {
+      const amountP1 = toWei(25000)
+      const amountP2 = toWei(10000)
+      const amountP3 = toWei(20000)
+      
+      let transaction = await challengeToken.connect(person1).approve(crowdfunding.address, amountP1)
+      await transaction.wait()
+      transaction = await challengeToken.connect(person2).approve(crowdfunding.address, amountP2)
+      await transaction.wait()
+      transaction = await challengeToken.connect(person3).approve(crowdfunding.address, amountP3)
+      await transaction.wait()
+  
+      // add token to crowdfunding
+      await crowdfunding.connect(person1).pledge(amountP1)
+      await crowdfunding.connect(person2).pledge(amountP2)
+      await crowdfunding.connect(person3).pledge(amountP3)
+
+      
+      // contract approval
+      let total = await crowdfunding.totalRaised()
+      transaction = await challengeToken.connect(firstAccount).approve(crowdfunding.address, total)
+      await transaction.wait()
+
+
+      // approve transfer from contract to first account address
+      await challengeToken.allowance(firstAccount.address, crowdfunding.address)
+
+
+      // cash out
+      await crowdfunding.connect(firstAccount).claim()
+      
+      // get balance of the accounts after pledging and getting back part of the funds
+      let balance = await challengeToken.balanceOf(firstAccount.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('755000')
+
+      balance = await challengeToken.balanceOf(person1.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('75000')
+
+      balance = await challengeToken.balanceOf(person2.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('90000')
+
+      balance = await challengeToken.balanceOf(person3.address)
+      balance =  fromWei(balance.toString())
+      expect(balance).to.be.equal('80000')
+    })
+  })
 })
