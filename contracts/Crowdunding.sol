@@ -100,9 +100,13 @@ contract Crowdfunding {
     */
     function claim() public {
         require(msg.sender == owner, "Only the owner can cancel the campaign"); // only the owner can call this function
-        require(totalRaised >= goal, "Goal has not yet been reached"); // if the goal was reached, msg.sender can't claim the funds transferred
+        require(
+            totalRaised >= goal || goalWasReached,
+            "Goal has not yet been reached"
+        ); // if the goal was reached, the owner can claim the funds transferred
         require(totalRaised > 0, "There are no pledged any funds available"); // amount must be positive
         require(token.transfer(msg.sender, totalRaised), "Transfer failed"); //transfer funds
+        goalWasReached = true;
         emit claimFunds(true);
     }
 
@@ -114,7 +118,10 @@ contract Crowdfunding {
     */
     function cancel() public {
         require(msg.sender == owner, "Only the owner can cancel the campaign"); // only the owner can call this function
-        require(totalRaised < goal, "Goal has already been reached"); // asserts that the goal hasn't been reached
+        require(
+            totalRaised < goal && !goalWasReached,
+            "Goal has already been reached"
+        ); // asserts that the goal hasn't been reached
         // refund for all users
         for (uint256 i = 1; i < totalPledges + 1; i++) {
             uint256 amount = pledges[listOfUsers[i]]; // listOfUsers[i] is the address for a particular user
