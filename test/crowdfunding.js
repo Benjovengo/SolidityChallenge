@@ -109,4 +109,12 @@ describe('Deployment', () => {
     console.log('      Crowdfunding Contract Address: ', crowdfundingAddress)
   })
 
+  it('Goal', async () => {
+    expect(crowdfunding.goal()).to.be.not.equal(10)
+  })
+
+  it('Deadline', async () => {
+    expect(crowdfunding.deadline()).to.be.not.equal(100)
+  })
+
 })
