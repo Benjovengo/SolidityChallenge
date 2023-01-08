@@ -49,4 +49,35 @@ contract Crowdfunding {
         deadline = _deadline;
         initialBlockTime = block.timestamp;
     }
+
+    /* Pledge Function 
+       - argument: amount
+       - pledges: stores the amount funded by a certain address
+       - msg.sender is the address put on pledges list
+    */
+    function pledge(uint256 amount) public {
+        require(amount > 0, "Amount must be greater than 0");
+        require(
+            block.timestamp <= initialBlockTime + deadline,
+            "Campaign has already ended."
+        );
+        require(
+            token.transferFrom(msg.sender, address(this), amount),
+            "Transfer failed"
+        );
+        // checks if sender has already pledged before or not
+        if (pledges[msg.sender] == 0) {
+            totalPledges++; // updates total number of users that pledged
+            listOfUsers[totalPledges] = msg.sender; // add new user to the list of pledged users
+            newUser = true;
+        } else {
+            newUser = false;
+        }
+        pledges[msg.sender] = pledges[msg.sender].add(amount); // add amount to the funds already pledged by the user
+        totalRaised = totalRaised.add(amount); // updates the total amount raised
+        if (totalRaised >= goal) {
+            goalWasReached = true;
+        }
+        emit stateChanged(totalRaised, totalPledges, newUser, goalWasReached); // emit event for DApps
+    }
 }
