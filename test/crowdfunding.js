@@ -27,6 +27,13 @@ describe('Deployment', () => {
   const ChallengeToken = await ethers.getContractFactory('ChallengeToken')
   challengeToken = await upgrades.deployProxy(ChallengeToken, [1000000], {initializer: 'initialize'})
 
+  // Deploy Crowdfunding
+  let campainGoal = 10 // Campain Goal - hard-coded
+  let deadline = 100 // Campain Deadline - hard-coded
+  const Crowdfunding = await ethers.getContractFactory('Crowdfunding')
+  //crowdfunding = await Crowdfunding.deploy(challengeToken.address, campainGoal, deadline)
+  crowdfunding = await upgrades.deployProxy(Crowdfunding, [challengeToken.address, campainGoal, deadline], {initializer: 'initialize'})
+
   })
 
   it('Token deployment', async () => {
@@ -91,6 +98,15 @@ describe('Deployment', () => {
     expect(result).to.be.equal('5')
 
     console.log('      Person2 balance: ', result)
+  })
+
+  it('Crowdfunding deployment', async () => {
+    const crowdfundingAddress = await crowdfunding.address
+    assert.notEqual(crowdfundingAddress, 0x0)
+    assert.notEqual(crowdfundingAddress, '')
+    assert.notEqual(crowdfundingAddress, null)
+    assert.notEqual(crowdfundingAddress, undefined)
+    console.log('      Crowdfunding Contract Address: ', crowdfundingAddress)
   })
 
 })
