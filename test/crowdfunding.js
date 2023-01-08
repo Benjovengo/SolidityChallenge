@@ -19,7 +19,6 @@ function delay(time) {
 /* Tests on deployment */
 describe('Deployment', () => {
   // Variables
-  let campainGoal
   let challengeToken
   let crowdfunding
 
@@ -126,6 +125,10 @@ describe('Deployment', () => {
 
 /* Tests on crowdfunding */
 describe('Crowdfunding Funcionalities', () => {
+  // Variables
+  let challengeToken
+  let crowdfunding
+  
   // before each test
   beforeEach(async () => {
     // Setup accounts
