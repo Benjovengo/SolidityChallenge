@@ -35,7 +35,7 @@ describe('Deployment', () => {
     assert.notEqual(tokenAddress, '')
     assert.notEqual(tokenAddress, null)
     assert.notEqual(tokenAddress, undefined)
-    console.log('      Token Contrct Address: ', tokenAddress)
+    console.log('      Token Contract Address: ', tokenAddress)
   })
 
   it('Token deployment', async () => {
