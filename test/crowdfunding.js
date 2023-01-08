@@ -11,6 +11,10 @@ const fromWei = (n) => {
   return Web3.utils.fromWei(n.toString(), 'ether')
 }
 
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 
 /* Tests on deployment */
 describe('Deployment', () => {
@@ -276,5 +280,25 @@ describe('Crowdfunding Funcionalities', () => {
       balance =  fromWei(balance.toString())
       expect(balance).to.be.equal('80000')
     })
+  })
+
+  describe('Testing Funcionalities', () => {
+    it('Reached Deadline', async () => {
+      let amountInCHAL = 25000
+      let amount = toWei(amountInCHAL)
+      let transaction = await challengeToken.connect(person1).approve(crowdfunding.address, amount)
+      await transaction.wait()
+      await crowdfunding.connect(person1).pledge(amount)
+      
+      // wait for the deadline and then try to pledge
+      await delay(10000)
+      transaction = await challengeToken.connect(person2).approve(crowdfunding.address, amount)
+      await transaction.wait()
+      await crowdfunding.connect(person2).pledge(amount)
+
+      // only the first person will be able to contribute to the campain
+      expect(crowdfunding.totalRaised()).to.be.not.equal(amount)
+    })
+    
   })
 })
