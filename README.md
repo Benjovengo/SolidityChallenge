@@ -17,8 +17,9 @@ This is a smart contract for a crowdfunding campaign that uses a custom ERC-20 t
 ### Deploy
 
 1. Start a local Ethereum network with Hardhat: `npx hardhat node`
-2. Compile the contracts: `npx hardhat compile`
-3. Migrate the contracts to the local network: `npx hardhat migrate`
+2. Open a new terminal
+3. Compile the contracts: `npx hardhat compile`
+4. Migrate the contracts to the local network: `npx hardhat migrate`
 
 ### Test
 
@@ -59,3 +60,5 @@ The project consists of two contracts:
 2. The other one is the crowdfunding smart contract (called _Crowdfunding.sol_)
    - essencially it will govern the crowdfunding operations
    - such as pledging, claiming, cancelling
+
+After compiling the project, it is possible to interact with them using `npx hardhat console`.
