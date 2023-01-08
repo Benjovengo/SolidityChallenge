@@ -35,6 +35,96 @@ This is a smart contract for a crowdfunding campaign that uses a custom ERC-20 t
 1. Start a local Ethereum network with Hardhat: `npx hardhat node`
 2. Use the deployed contract by interacting with it through a _web3 interface_, such as the Hardhat console: `npx hardhat console`
 
+Use this sample interaction with the crowdfunding contract via the hardhat console as a guide on how to start interacting with contracts using the console. **Note:** _truffle_ also has a similar funcionality.
+
+```console
+npx hardhat compile
+
+npx hardhat console
+
+# Load requirement
+const Web3 = require('web3');
+
+# Setup accounts
+[firstAccount, person1, person2] = await ethers.getSigners()
+
+
+# Deploy Token Contract
+const ChallengeToken = await ethers.getContractFactory('ChallengeToken')
+const challengeToken = await upgrades.deployProxy(ChallengeToken, [1000000], {initializer: 'initialize'})
+
+
+# Deploy Crowdfunding
+let campainGoal = Web3.utils.toWei('25000', 'ether')
+let deadline = 1000000
+
+const Crowdfunding = await ethers.getContractFactory('Crowdfunding')
+const crowdfunding = await upgrades.deployProxy(Crowdfunding, [challengeToken.address, campainGoal, deadline], {initializer: 'initialize'})
+
+
+# Now, both contracts are deployed and ready to be used!
+
+# Transfer funds to accounts
+let amount = Web3.utils.toWei('100000', 'ether')
+
+# Transfer to person1
+let transaction = await challengeToken.connect(firstAccount).approve(person1.address, amount)
+await transaction.wait()
+await challengeToken.connect(firstAccount).transfer(person1.address, amount)
+
+# Transfer to person2
+transaction = await challengeToken.connect(firstAccount).approve(person2.address, amount)
+await transaction.wait()
+await challengeToken.connect(firstAccount).transfer(person2.address, amount)
+
+
+# Now all three accounts have tokens!
+let person1Balance = await challengeToken.balanceOf(person1.address)
+Web3.utils.fromWei(person1Balance.toString(),'ether')
+
+
+# Pledging
+
+amount = Web3.utils.toWei('15000', 'ether')
+transaction = await challengeToken.connect(person1).approve(crowdfunding.address, amount)
+await transaction.wait()
+
+await crowdfunding.connect(person1).pledge(amount)
+
+# Check crowdfunding balance
+let crowdfundongBalance = await crowdfunding.totalRaised()
+let raised = Web3.utils.fromWei(crowdfundongBalance.toString(),'ether')
+
+# Person2 also wants to contribute
+amount = Web3.utils.toWei('10000', 'ether')
+transaction = await challengeToken.connect(person2).approve(crowdfunding.address, amount)
+await transaction.wait()
+
+await crowdfunding.connect(person2).pledge(amount)
+
+# Let's check crowdfunding balance again
+crowdfundongBalance = await crowdfunding.totalRaised()
+
+# Let' compare it to the goal of the crowdfunding
+let campainRaiseGoal = await crowdfunding.goal()
+campainRaiseGoal
+
+# Time to cash out!!
+
+# But first, let's see the balance of the owner of the campain
+balance = await challengeToken.balanceOf(firstAccount.address)
+let balanceStr = await balance.toString()
+Web3.utils.fromWei(balanceStr,'ether')
+
+# Time to cash out
+await crowdfunding.connect(firstAccount).claim()
+
+# See the balance now
+let newBalance = await challengeToken.balanceOf(firstAccount.address)
+let newBalanceStr = await balance.toString()
+Web3.utils.fromWei(newBalanceStr,'ether')
+```
+
 ### Notes
 
 - You may need to increase the gas limit in the Hardhat config file (hardhat.config.js) if you encounter out-of-gas errors during migration or testing.
