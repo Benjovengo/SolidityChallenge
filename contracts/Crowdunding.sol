@@ -21,7 +21,6 @@ contract Crowdfunding {
     mapping(address => uint256) public pledges; // Pledges from each user
     uint256 public totalPledges; // Total number of different user accounts
     mapping(uint256 => address) public listOfUsers; // List of all users (used to pay back in case of cancelling of contract)
-    bool private newUser; // is a new pledger?
     bool private goalWasReached; // is the goal reached?
 
     /* Events for DApps to observe changes on state */
@@ -33,7 +32,6 @@ contract Crowdfunding {
         bool goalReached
     );
 
-    event goalReached(bool hasReached); // Goal reached
     event claimFunds(bool claimedFunds); // Claim funds
     event cancelCrowdfunding(bool returnTokensToPledgers); // Return funds to original ownersS
     event withdrawFunds(address whoPledged, uint256 amount); // withdraw funds
@@ -56,6 +54,8 @@ contract Crowdfunding {
        - msg.sender is the address put on pledges list
     */
     function pledge(uint256 amount) public {
+        bool newUser; // is a new pledger?
+
         require(amount > 0, "Amount must be greater than 0");
         require(
             block.timestamp <= initialBlockTime + deadline,
