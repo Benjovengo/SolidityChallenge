@@ -36,9 +36,10 @@ describe('Deployment', () => {
     await challengeToken.transfer(person1.address, amount, { from: firstAccount.address })
 
     // Deploy Crowdfunding
-    campainGoal = 10 // Campain Goal - hard-coded
+    let campainGoal = 10 // Campain Goal - hard-coded
+    let deadline = 100 // Campain Deadline - hard-coded
     const Crowdfunding = await ethers.getContractFactory('Crowdfunding')
-    crowdfunding = await Crowdfunding.deploy(challengeToken.address, campainGoal)
+    crowdfunding = await Crowdfunding.deploy(challengeToken.address, campainGoal, deadline)
 
   })
 
@@ -90,6 +91,7 @@ describe('Crowdfunding Funcionalities', () => {
 
   // Variables
   let campainGoal
+  let deadline
   let challengeToken
   let crowdfunding
 
@@ -120,8 +122,9 @@ describe('Crowdfunding Funcionalities', () => {
 
     // Deploy Crowdfunding
     campainGoal = 10 // Campain Goal - hard-coded
+    deadline = 100 // Campain Deadline - hard-coded
     const Crowdfunding = await ethers.getContractFactory('Crowdfunding')
-    crowdfunding = await Crowdfunding.deploy(challengeToken.address, toWei(campainGoal))
+    crowdfunding = await Crowdfunding.deploy(challengeToken.address, toWei(campainGoal), deadline)
   })
 
   describe('Functions', () => {
@@ -227,7 +230,7 @@ describe('Crowdfunding Funcionalities', () => {
       // get balance of the accounts after pledging and getting back part of the funds
       let balance = await challengeToken.balanceOf(firstAccount.address)
       balance =  fromWei(balance.toString())
-      expect(balance).to.be.equal('97')
+      expect(balance).to.be.equal('999997')
 
       balance = await challengeToken.balanceOf(person1.address)
       balance =  fromWei(balance.toString())

@@ -26,8 +26,9 @@ async function main() {
 
   // Deploy Crowdfunding
   const campainGoal = 10 // Campain Goal - hard-coded
+  const deadline = 100 // Campain Goal - hard-coded
   const Crowdfunding = await ethers.getContractFactory('Crowdfunding')
-  const crowdfunding = await Crowdfunding.deploy(challengeToken.address, campainGoal)
+  const crowdfunding = await Crowdfunding.deploy(challengeToken.address, campainGoal, deadline)
   await crowdfunding.deployed()
   console.log(`Deployed Crowdfunding Contract at: ${crowdfunding.address}`)
 
