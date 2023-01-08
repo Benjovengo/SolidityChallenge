@@ -3,19 +3,16 @@ pragma solidity ^0.8.17;
 
 /** Imports **/
 // Safe modules
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 // Upgradeable modules
-import "@openzeppelin/upgrades/contracts/Initializable.sol";
-import "@openzeppelin/upgrades/contracts/upgradeability/Proxy.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 contract Crowdfunding {
     // Safe definitions - OpenZeppelin
     using SafeMath for uint256;
-    using SafeERC20 for IERC20;
 
     // Variables - declarations
-    IERC20 private token; // Custom ERC20 token for this campaign
+    IERC20Upgradeable private token; // Custom ERC20 token for this campaign
     address private owner; // Owner of the contract
     uint256 public goal; // Goal for the campaign
     uint256 public deadline; // Deadline for the campain
@@ -42,7 +39,7 @@ contract Crowdfunding {
     event withdrawFunds(address whoPledged, uint256 amount); // withdraw funds
 
     constructor(
-        IERC20 _token,
+        IERC20Upgradeable _token,
         uint256 _goal,
         uint256 _deadline
     ) {
