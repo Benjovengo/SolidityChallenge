@@ -138,8 +138,8 @@ describe('Crowdfunding Funcionalities', () => {
       expect(balance).to.be.equal('0')
     })
 
-    it('Claim', async () => {
-      let amountInCHAL = 5
+    it('Get money from crowdfunding', async () => {
+      let amountInCHAL = 3
       let amount = toWei(amountInCHAL)
       let transaction = await challengeToken.connect(person1).approve(crowdfunding.address, amount)
       await transaction.wait()
@@ -148,22 +148,24 @@ describe('Crowdfunding Funcionalities', () => {
       transaction = await challengeToken.connect(person3).approve(crowdfunding.address, amount)
       await transaction.wait()
   
+      // add token to crowdfunding
       await crowdfunding.connect(person1).pledge(amount)
       await crowdfunding.connect(person2).pledge(toWei(2))
-      await crowdfunding.connect(person3).pledge(amount)
-  
-      await crowdfunding.connect(person1).claim()
+
+      // take out money
+      await crowdfunding.connect(person1).takeOut(toWei(1))
       
+      // get balance of the accounts after pledging and getting back part of the funds
       let balance = await challengeToken.balanceOf(person1.address)
       balance =  fromWei(balance.toString())
-      expect(balance).to.be.equal('5')
+      expect(balance).to.be.equal('3')
 
       balance = await challengeToken.balanceOf(person2.address)
       balance =  fromWei(balance.toString())
       expect(balance).to.be.equal('3')
     })
 
-    it('Cancell', async () => {
+    it('Cancel', async () => {
       let amountInCHAL = 2
       let amount = toWei(amountInCHAL)
       // transfer funds from different accounts
@@ -180,7 +182,6 @@ describe('Crowdfunding Funcionalities', () => {
       await crowdfunding.connect(person3).pledge(amount)
       
   
-      //console.log(await crowdfunding.goal())
       await crowdfunding.connect(firstAccount).cancel() // error if any other account - OK
       
       let balance = await challengeToken.balanceOf(person1.address)
