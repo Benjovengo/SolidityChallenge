@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.17;
 
-// Import Modules
+/** Imports **/
+// Safe modules
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+// Upgradeable modules
+import "@openzeppelin/upgrades/contracts/Initializable.sol";
+import "@openzeppelin/upgrades/contracts/upgradeability/Proxy.sol";
 
 contract Crowdfunding {
     // Safe definitions - OpenZeppelin
