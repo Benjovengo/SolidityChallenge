@@ -19,14 +19,16 @@ This is a smart contract for a crowdfunding campaign that uses a custom ERC-20 t
 1. Start a local Ethereum network with Hardhat: `npx hardhat node`
 2. Open a new terminal
 3. Compile the contracts: `npx hardhat compile`
-4. Migrate the contracts to the local network: `npx hardhat migrate`
+4. Migrate the contracts to the local network: `npx hardhat run scripts/deploy.js --network localhost`
+
+[![asciicast](https://asciinema.org/a/550350.svg)](https://asciinema.org/a/550350)
 
 ### Test
 
 1. Start a local Ethereum network with Hardhat: `npx hardhat node`
 2. Run the tests: `npx hardhat test`
 
-[![asciicast](https://asciinema.org/a/jc6Eo8EZdCy0r4ZHjIIqX2tp8.svg)](https://asciinema.org/a/jc6Eo8EZdCy0r4ZHjIIqX2tp8)
+[![asciicast](https://asciinema.org/a/550347.svg)](https://asciinema.org/a/550347)
 
 ### Use
 
