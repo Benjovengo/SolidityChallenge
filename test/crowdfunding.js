@@ -153,7 +153,7 @@ describe('Crowdfunding Funcionalities', () => {
       await crowdfunding.connect(person2).pledge(toWei(2))
 
       // take out money
-      await crowdfunding.connect(person1).takeOut(toWei(1))
+      await crowdfunding.connect(person1).withdraw(toWei(1))
       
       // get balance of the accounts after pledging and getting back part of the funds
       let balance = await challengeToken.balanceOf(person1.address)
