@@ -204,15 +204,22 @@ describe('Crowdfunding Funcionalities', () => {
       await transaction.wait()
       transaction = await challengeToken.connect(person3).approve(crowdfunding.address, toWei(5))
       await transaction.wait()
-
-      // contract approval
-      transaction = await challengeToken.connect(firstAccount).approve(crowdfunding.address, toWei(15))
-      await transaction.wait()
   
       // add token to crowdfunding
       await crowdfunding.connect(person1).pledge(toWei(4))
       await crowdfunding.connect(person2).pledge(toWei(3))
-      await crowdfunding.connect(person2).pledge(toWei(5))
+      await crowdfunding.connect(person3).pledge(toWei(5))
+
+      
+      // contract approval
+      let total = await crowdfunding.totalRaised()
+      transaction = await challengeToken.connect(firstAccount).approve(crowdfunding.address, total)
+      await transaction.wait()
+
+
+      // approve transfer from contract to first account address
+      await challengeToken.allowance(firstAccount.address, crowdfunding.address)
+
 
       // take out money
       await crowdfunding.connect(firstAccount).claim()

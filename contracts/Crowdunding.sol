@@ -79,10 +79,7 @@ contract Crowdfunding {
         require(msg.sender == owner, "Only the owner can cancel the campaign"); // only the owner can call this function
         require(totalRaised >= goal, "Goal has not yet been reached"); // if the goal was reached, msg.sender can't claim the funds transferred
         require(totalRaised > 0, "You have not pledged any funds"); // amount must be positive
-        require(
-            token.transferFrom(address(this), msg.sender, totalRaised),
-            "Transfer failed"
-        ); //transfer funds
+        require(token.transfer(msg.sender, totalRaised), "Transfer failed"); //transfer funds
     }
 
     /* Cancel Function 
