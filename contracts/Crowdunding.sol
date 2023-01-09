@@ -96,7 +96,8 @@ contract Crowdfunding {
         );
         require(totalRaised < goal, "Goal has been reached"); // if the goal was reached, msg.sender can't have back the funds
         require(token.transfer(msg.sender, amount), "Transfer failed"); //transfer funds
-        pledges[msg.sender] = pledges[msg.sender] - amount; // resets the amount sent by msg.sender
+        pledges[msg.sender] = pledges[msg.sender].sub(amount);
+        totalRaised = totalRaised.sub(amount);
         emit withdrawFunds(msg.sender, amount);
     }
 
