@@ -22,6 +22,7 @@ contract Crowdfunding {
     uint256 public totalPledges; // Total number of different user accounts
     mapping(uint256 => address) public listOfUsers; // List of all users (used to pay back in case of cancelling of contract)
     bool private goalWasReached; // is the goal reached?
+    bool private cancelledCampain; // was this campain cancelled
 
     /* Events for DApps to observe changes on state */
     // Changes in states
@@ -46,6 +47,7 @@ contract Crowdfunding {
         goal = _goal;
         deadline = _deadline;
         initialBlockTime = block.timestamp;
+        cancelledCampain = false;
     }
 
     /* Pledge Function 
@@ -57,6 +59,7 @@ contract Crowdfunding {
         bool newUser; // is a new pledger?
 
         require(amount > 0, "Amount must be greater than 0");
+        require(!cancelledCampain, "This campain was cancelled");
         require(
             block.timestamp <= initialBlockTime + deadline,
             "Campaign has already ended."
@@ -129,6 +132,7 @@ contract Crowdfunding {
             require(token.transfer(listOfUsers[i], amount), "Transfer failed"); // transfer the funds
             pledges[listOfUsers[i]] = 0; // if the transfer is successfull, resets the amount funded by the particular address
         }
-        emit cancelCrowdfunding(false);
+        cancelledCampain = true;
+        emit cancelCrowdfunding(cancelledCampain);
     }
 }
