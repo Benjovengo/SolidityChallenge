@@ -16,10 +16,6 @@ contract ChallengeToken is Initializable, ERC20Upgradeable, OwnableUpgradeable {
     function initialize(uint256 _totalSupply) public initializer {
         __ERC20_init("ChallengeToken", "CHAL");
         __Ownable_init();
-        mint(msg.sender, _totalSupply * 10**decimals());
-    }
-
-    function mint(address to, uint256 amount) public onlyOwner {
-        _mint(to, amount);
+        _mint(msg.sender, _totalSupply * 10**decimals());
     }
 }
