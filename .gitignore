@@ -2,6 +2,7 @@
 
 # work directory
 work/
+video/
 # npm/node.js directory
 node_modules/
 # dotenv file
