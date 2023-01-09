@@ -33,6 +33,7 @@ contract Crowdfunding {
         bool goalReached
     );
 
+    event reachedGoal(bool totalGoalReached);
     event claimFunds(bool claimedFunds); // Claim funds
     event cancelCrowdfunding(bool returnTokensToPledgers); // Return funds to original ownersS
     event withdrawFunds(address whoPledged, uint256 amount); // withdraw funds
@@ -80,6 +81,7 @@ contract Crowdfunding {
         totalRaised = totalRaised.add(amount); // updates the total amount raised
         if (totalRaised >= goal) {
             goalWasReached = true;
+            emit reachedGoal(goalWasReached);
         }
         emit stateChanged(totalRaised, totalPledges, newUser, goalWasReached); // emit event for DApps
     }
