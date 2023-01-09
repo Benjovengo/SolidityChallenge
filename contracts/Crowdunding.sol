@@ -56,17 +56,17 @@ contract Crowdfunding {
        - pledges: stores the amount funded by a certain address
        - msg.sender is the address put on pledges list
     */
-    function pledge(uint256 amount) public {
+    function pledge(uint256 _amount) public {
         bool newUser; // is a new pledger?
 
-        require(amount > 0, "Amount must be greater than 0");
+        require(_amount > 0, "Amount must be greater than 0");
         require(!cancelledCampain, "This campain was cancelled");
         require(
             block.timestamp <= initialBlockTime + deadline,
             "Campaign has already ended."
         );
         require(
-            token.transferFrom(msg.sender, address(this), amount),
+            token.transferFrom(msg.sender, address(this), _amount),
             "Transfer failed"
         );
         // checks if sender has already pledged before or not
@@ -77,8 +77,8 @@ contract Crowdfunding {
         } else {
             newUser = false;
         }
-        pledges[msg.sender] = pledges[msg.sender].add(amount); // add amount to the funds already pledged by the user
-        totalRaised = totalRaised.add(amount); // updates the total amount raised
+        pledges[msg.sender] = pledges[msg.sender].add(_amount); // add amount to the funds already pledged by the user
+        totalRaised = totalRaised.add(_amount); // updates the total amount raised
         if (totalRaised >= goal) {
             goalWasReached = true;
             emit reachedGoal(goalWasReached);
@@ -89,16 +89,16 @@ contract Crowdfunding {
     /* Withdraw Function
        - msg.sender can only claim up to the amount funded stored on pledges[msg.sender]
     */
-    function withdraw(uint256 amount) public {
+    function withdraw(uint256 _amount) public {
         require(
-            amount <= pledges[msg.sender],
+            _amount <= pledges[msg.sender],
             "Amount must be lesser than or equal to the amount funded"
         );
         require(totalRaised < goal, "Goal has been reached"); // if the goal was reached, msg.sender can't have back the funds
-        require(token.transfer(msg.sender, amount), "Transfer failed"); //transfer funds
-        pledges[msg.sender] = pledges[msg.sender].sub(amount);
-        totalRaised = totalRaised.sub(amount);
-        emit withdrawFunds(msg.sender, amount);
+        require(token.transfer(msg.sender, _amount), "Transfer failed"); //transfer funds
+        pledges[msg.sender] = pledges[msg.sender].sub(_amount);
+        totalRaised = totalRaised.sub(_amount);
+        emit withdrawFunds(msg.sender, _amount);
     }
 
     /* Claim Function
