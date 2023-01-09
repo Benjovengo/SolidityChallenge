@@ -106,6 +106,7 @@ contract Crowdfunding {
         ); // if the goal was reached, the owner can claim the funds transferred
         require(totalRaised > 0, "There are no pledged any funds available"); // amount must be positive
         require(token.transfer(msg.sender, totalRaised), "Transfer failed"); //transfer funds
+        totalRaised = 0;
         goalWasReached = true;
         emit claimFunds(true);
     }
